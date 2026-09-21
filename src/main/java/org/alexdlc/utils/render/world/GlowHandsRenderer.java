@@ -12,6 +12,7 @@ import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.DyeItem;
@@ -325,26 +326,30 @@ public final class GlowHandsRenderer {
         }
 
         Item item = stack.getItem();
-        if (item instanceof DyeItem dye) {
-            return switch (dye.getColor().name()) {
-                case "RED" -> 0xFFA10000;
-                case "ORANGE" -> 0xFFF07613;
-                case "WHITE" -> 0xFFF4F4F4;
-                case "YELLOW" -> 0xFFFACE35;
-                case "LIME" -> 0xFF70B919;
-                case "GREEN" -> 0xFF00A000;
-                case "PINK" -> 0xFFF773CF;
-                case "GRAY" -> 0xFF3F3F3F;
-                case "LIGHT_GRAY", "LIGHT_GREY" -> 0xFF909090;
-                case "CYAN" -> 0xFF15898D;
-                case "PURPLE" -> 0xFF6F10A2;
-                case "BLUE" -> 0xFF3700B3;
-                case "BROWN" -> 0xFF814418;
-                case "LIGHT_BLUE", "AQUA" -> 0xFF26C7DB;
-                case "MAGENTA" -> 0xFFB31DAC;
-                case "BLACK" -> 0xFF141519;
-                default -> feature.customColor();
-            };
+        if (item instanceof DyeItem) {
+            String path = BuiltInRegistries.ITEM.getKey(item).getPath();
+            if (path.endsWith("_dye")) {
+                return switch (path.substring(0, path.length() - 4)) {
+                    case "red" -> 0xFFA10000;
+                    case "orange" -> 0xFFF07613;
+                    case "white" -> 0xFFF4F4F4;
+                    case "yellow" -> 0xFFFACE35;
+                    case "lime" -> 0xFF70B919;
+                    case "green" -> 0xFF00A000;
+                    case "pink" -> 0xFFF773CF;
+                    case "gray" -> 0xFF3F3F3F;
+                    case "light_gray" -> 0xFF909090;
+                    case "cyan" -> 0xFF15898D;
+                    case "purple" -> 0xFF6F10A2;
+                    case "blue" -> 0xFF3700B3;
+                    case "brown" -> 0xFF814418;
+                    case "light_blue" -> 0xFF26C7DB;
+                    case "magenta" -> 0xFFB31DAC;
+                    case "black" -> 0xFF141519;
+                    default -> feature.customColor();
+                };
+            }
+            return feature.customColor();
         }
         int tint = minecraft.itemColors.getColor(stack, 0);
         if ((tint & 0xFFFFFF) != 0xFFFFFF && (tint & 0xFFFFFF) != 0) {

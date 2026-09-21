@@ -106,7 +106,7 @@ public final class ParticleRainRenderer {
             if (hit.getType() == BlockHitResult.Type.BLOCK) {
                 if (feature.ripples.getValue()) {
                     Ripple ripple = new Ripple();
-                    ripple.position = hit.getPosition();
+                    ripple.position = hit.getLocation();
                     ripple.startNanos = now;
                     ripple.radius = feature.rippleRadius.getValue().floatValue();
                     this.ripples.add(ripple);
