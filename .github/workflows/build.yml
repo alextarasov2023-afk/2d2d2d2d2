@@ -9,6 +9,11 @@ concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+  issues: write
+  releases: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
