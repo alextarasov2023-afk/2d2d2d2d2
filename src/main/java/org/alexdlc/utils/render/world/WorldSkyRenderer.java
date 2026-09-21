@@ -12,7 +12,7 @@ import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuSampler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import org.alexdlc.feature.impl.visual.WorldTweaksFeature;
+import org.alexdlc.feature.impl.visual.ShaderSkyFeature;
 import org.alexdlc.utils.render.post.PostFx;
 import org.alexdlc.utils.ColorUtil;
 import org.alexdlc.utils.render.Render3DUtil;
@@ -24,7 +24,7 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.ByteBuffer;
 import java.util.Optional;
 
-public final class WorldTweaksRenderer {
+public final class WorldSkyRenderer {
     private static final int SKY_UNIFORM_SIZE = new Std140SizeCalculator()
             .putMat4f()
             .putVec4()
@@ -32,22 +32,14 @@ public final class WorldTweaksRenderer {
             .putVec4()
             .putVec4()
             .get();
-    private static final int SATURATION_UNIFORM_SIZE = new Std140SizeCalculator()
-            .putVec4()
-            .get();
 
     private final GpuBuffer skyUniforms = uniformBuffer(
-            "Alex DLC World Sky UBO",
+            "Alex DLC ShaderSky UBO",
             SKY_UNIFORM_SIZE
     );
-    private final GpuBuffer saturationUniforms = uniformBuffer(
-            "Alex DLC World Saturation UBO",
-            SATURATION_UNIFORM_SIZE
-    );
-    private TextureTarget sceneCopy;
     private TextureTarget skyClouds;
 
-    public void renderSky(WorldTweaksFeature feature, CameraRenderState cameraState) {
+    public void render(ShaderSkyFeature feature, CameraRenderState cameraState) {
         Minecraft minecraft = Minecraft.getInstance();
         RenderTarget target = minecraft.gameRenderer.mainRenderTarget();
         if (!valid(target) || cameraState == null || !cameraState.initialized) {
@@ -65,14 +57,26 @@ public final class WorldTweaksRenderer {
 
         RenderPipeline cloudsPipeline;
         RenderPipeline compositePipeline;
-        switch (feature.skyEffect.getValue()) {
-            case WorldTweaksFeature.SKY_NEBULA -> {
+        switch (feature.shader.getValue()) {
+            case ShaderSkyFeature.SKY_NEBULA -> {
                 cloudsPipeline = PostPipelines.WORLD_SKY_CLOUDS_NEBULA;
                 compositePipeline = PostPipelines.WORLD_SKY_NEBULA;
             }
-            case WorldTweaksFeature.SKY_PLASMA -> {
+            case ShaderSkyFeature.SKY_PLASMA -> {
                 cloudsPipeline = PostPipelines.WORLD_SKY_CLOUDS_PLASMA;
                 compositePipeline = PostPipelines.WORLD_SKY_PLASMA;
+            }
+            case ShaderSkyFeature.SKY_AURORA -> {
+                cloudsPipeline = PostPipelines.WORLD_SKY_CLOUDS_AURORA;
+                compositePipeline = PostPipelines.WORLD_SKY_AURORA;
+            }
+            case ShaderSkyFeature.SKY_GALAXY -> {
+                cloudsPipeline = PostPipelines.WORLD_SKY_CLOUDS_GALAXY;
+                compositePipeline = PostPipelines.WORLD_SKY_GALAXY;
+            }
+            case ShaderSkyFeature.SKY_SUNSET -> {
+                cloudsPipeline = PostPipelines.WORLD_SKY_CLOUDS_SUNSET;
+                compositePipeline = PostPipelines.WORLD_SKY_SUNSET;
             }
             default -> {
                 cloudsPipeline = PostPipelines.WORLD_SKY_CLOUDS_DEEP_SPACE;
@@ -84,7 +88,7 @@ public final class WorldTweaksRenderer {
         GpuSampler cloudSampler = RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR);
 
         try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
-                () -> "Alex DLC WorldTweaks sky clouds",
+                () -> "Alex DLC ShaderSky clouds",
                 this.skyClouds.getColorTextureView(),
                 Optional.empty()
         )) {
@@ -96,7 +100,7 @@ public final class WorldTweaksRenderer {
         }
 
         try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
-                () -> "Alex DLC WorldTweaks sky",
+                () -> "Alex DLC ShaderSky",
                 target.getColorTextureView(),
                 Optional.empty()
         )) {
@@ -109,58 +113,12 @@ public final class WorldTweaksRenderer {
         }
     }
 
-    public void renderSaturation(WorldTweaksFeature feature) {
-        Minecraft minecraft = Minecraft.getInstance();
-        RenderTarget target = minecraft.gameRenderer.mainRenderTarget();
-        if (!valid(target)) {
-            return;
-        }
-        ensureSceneCopy(target.width, target.height);
-        RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
-                target.getColorTexture(),
-                this.sceneCopy.getColorTexture(),
-                0, 0, 0, 0, 0,
-                target.width,
-                target.height
-        );
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            ByteBuffer data = Std140Builder.onStack(stack, SATURATION_UNIFORM_SIZE)
-                    .putVec4(
-                            Math.clamp(
-                                    1.0F + feature.saturationAmount.getValue().floatValue(),
-                                    0.0F,
-                                    3.0F
-                            ),
-                            0.0F,
-                            0.0F,
-                            0.0F
-                    )
-                    .get();
-            RenderSystem.getDevice().createCommandEncoder().writeToBuffer(
-                    this.saturationUniforms.slice(),
-                    data
-            );
-        }
-        try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
-                () -> "Alex DLC WorldTweaks saturation",
-                target.getColorTextureView(),
-                Optional.empty()
-        )) {
-            pass.setPipeline(PostPipelines.WORLD_SATURATION);
-            RenderSystem.bindDefaultUniforms(pass);
-            GpuSampler sampler = RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR);
-            pass.setUniform("SaturationUniforms", this.saturationUniforms);
-            pass.bindTexture("SceneSampler", this.sceneCopy.getColorTextureView(), sampler);
-            drawFullscreen(pass);
-        }
-    }
-
-    private void writeSkyUniforms(WorldTweaksFeature feature,
+    private void writeSkyUniforms(ShaderSkyFeature feature,
                                   Matrix4f inverseViewProjection,
                                   int width,
                                   int height) {
-        int primary = feature.skyColor1.getValue();
-        int secondary = feature.skyColor2.getValue();
+        int primary = feature.resolvedColor1();
+        int secondary = feature.resolvedColor2();
         try (MemoryStack stack = MemoryStack.stackPush()) {
             ByteBuffer data = Std140Builder.onStack(stack, SKY_UNIFORM_SIZE)
                     .putMat4f(inverseViewProjection)
@@ -178,8 +136,8 @@ public final class WorldTweaksRenderer {
                     )
                     .putVec4(
                             PostFx.shaderTime(),
-                            feature.skyIntensity.getValue().floatValue(),
-                            feature.skySpeed.getValue().floatValue(),
+                            feature.intensity.getValue().floatValue(),
+                            feature.speed.getValue().floatValue(),
                             RenderSystem.getDevice().getDeviceInfo().isZZeroToOne() ? 1.0F : 0.0F
                     )
                     .putVec4(1.0F / width, 1.0F / height, 0.0F, 0.0F)
@@ -189,29 +147,6 @@ public final class WorldTweaksRenderer {
                     data
             );
         }
-    }
-
-    private static void drawFullscreen(RenderPass pass) {
-        pass.setVertexBuffer(0, FullscreenQuad.buffer().slice());
-        pass.draw(FullscreenQuad.vertexCount(), 1, 0, 0);
-    }
-
-    private void ensureSceneCopy(int width, int height) {
-        if (this.sceneCopy != null
-                && this.sceneCopy.width == width
-                && this.sceneCopy.height == height) {
-            return;
-        }
-        if (this.sceneCopy != null) {
-            this.sceneCopy.destroyBuffers();
-        }
-        this.sceneCopy = new TextureTarget(
-                "alexdlc-world-tweaks-scene",
-                width,
-                height,
-                false,
-                PostPipelines.EFFECT_FORMAT
-        );
     }
 
     private void ensureSkyClouds(int width, int height) {
@@ -226,12 +161,17 @@ public final class WorldTweaksRenderer {
             this.skyClouds.destroyBuffers();
         }
         this.skyClouds = new TextureTarget(
-                "alexdlc-world-tweaks-sky-clouds",
+                "alexdlc-shadersky-clouds",
                 halfWidth,
                 halfHeight,
                 false,
                 PostPipelines.SKY_CLOUDS_FORMAT
         );
+    }
+
+    private static void drawFullscreen(RenderPass pass) {
+        pass.setVertexBuffer(0, FullscreenQuad.buffer().slice());
+        pass.draw(FullscreenQuad.vertexCount(), 1, 0, 0);
     }
 
     private static boolean valid(RenderTarget target) {
@@ -253,15 +193,10 @@ public final class WorldTweaksRenderer {
     }
 
     public void release() {
-        if (this.sceneCopy != null) {
-            this.sceneCopy.destroyBuffers();
-            this.sceneCopy = null;
-        }
         if (this.skyClouds != null) {
             this.skyClouds.destroyBuffers();
             this.skyClouds = null;
         }
         this.skyUniforms.close();
-        this.saturationUniforms.close();
     }
 }

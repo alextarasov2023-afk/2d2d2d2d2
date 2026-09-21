@@ -88,9 +88,7 @@ public final class ChamsCompositeEffect {
         if (feature.hasShaderFill()) {
             stylePass(
                     "Alex DLC Chams Shader Fill",
-                    feature.shader.is(ChamsFeature.SHADER_NEBULA)
-                            ? PostPipelines.CHAMS_NEBULA
-                            : PostPipelines.CHAMS_PLASMA,
+                    fillPipeline(feature),
                     output,
                     pass -> pass.bindTexture("MaskSampler", mask.getColorTextureView(), sampler)
             );
@@ -120,6 +118,19 @@ public final class ChamsCompositeEffect {
                     }
             );
         }
+    }
+
+    private static RenderPipeline fillPipeline(ChamsFeature feature) {
+        return switch (feature.shader.getValue()) {
+            case ChamsFeature.SHADER_NEBULA -> PostPipelines.CHAMS_NEBULA;
+            case ChamsFeature.SHADER_AURORA -> PostPipelines.CHAMS_AURORA;
+            case ChamsFeature.SHADER_PRISM -> PostPipelines.CHAMS_PRISM;
+            case ChamsFeature.SHADER_LIQUID -> PostPipelines.CHAMS_LIQUID;
+            case ChamsFeature.SHADER_HOLOGRAM -> PostPipelines.CHAMS_HOLOGRAM;
+            case ChamsFeature.SHADER_SILK -> PostPipelines.CHAMS_SILK;
+            case ChamsFeature.SHADER_PLASMA -> PostPipelines.CHAMS_PLASMA;
+            default -> PostPipelines.CHAMS_PLASMA;
+        };
     }
 
     private void stylePass(String label,

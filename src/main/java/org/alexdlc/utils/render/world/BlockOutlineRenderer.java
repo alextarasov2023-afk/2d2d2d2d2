@@ -236,6 +236,12 @@ public final class BlockOutlineRenderer {
             case BlockOutlineFeature.VARIANT_NEBULA -> through
                     ? PostPipelines.BLOCK_OUTLINE_NEBULA_THROUGH
                     : PostPipelines.BLOCK_OUTLINE_NEBULA;
+            case BlockOutlineFeature.VARIANT_AURORA -> through
+                    ? PostPipelines.BLOCK_OUTLINE_AURORA_THROUGH
+                    : PostPipelines.BLOCK_OUTLINE_AURORA;
+            case BlockOutlineFeature.VARIANT_PULSE -> through
+                    ? PostPipelines.BLOCK_OUTLINE_PULSE_THROUGH
+                    : PostPipelines.BLOCK_OUTLINE_PULSE;
             default -> through
                     ? PostPipelines.BLOCK_OUTLINE_CLASSIC_THROUGH
                     : PostPipelines.BLOCK_OUTLINE_CLASSIC;

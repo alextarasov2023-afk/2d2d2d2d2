@@ -101,11 +101,6 @@ public final class PostPipelines {
             .withUniform("HandMaskUniforms", UniformType.UNIFORM_BUFFER)
             .build();
 
-    private static final BindGroupLayout SATURATION_LAYOUT = BindGroupLayout.builder()
-            .withSampler("SceneSampler")
-            .withUniform("SaturationUniforms", UniformType.UNIFORM_BUFFER)
-            .build();
-
     private static final BindGroupLayout CHAMS_MASK_STYLE_LAYOUT = BindGroupLayout.builder()
             .withSampler("MaskSampler")
             .withUniform("ChamsStyle", UniformType.UNIFORM_BUFFER)
@@ -213,6 +208,14 @@ public final class PostPipelines {
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .withCull(false)
             .build();
+
+    public static final RenderPipeline HAND_SOLID = handFillPipeline("solid", "alexdlc:post/hand_solid");
+    public static final RenderPipeline HAND_SILK = handFillPipeline("silk", "alexdlc:post/hand_fill");
+    public static final RenderPipeline HAND_AURORA = handFillPipeline("aurora", "alexdlc:post/hand_aurora");
+    public static final RenderPipeline HAND_PRISM = handFillPipeline("prism", "alexdlc:post/hand_prism");
+    public static final RenderPipeline HAND_LIQUID = handFillPipeline("liquid", "alexdlc:post/hand_liquid");
+    public static final RenderPipeline HAND_HOLOGRAM = handFillPipeline("hologram", "alexdlc:post/hand_hologram");
+    public static final RenderPipeline HAND_NEBULA = handFillPipeline("nebula", "alexdlc:post/hand_nebula");
 
     public static final RenderPipeline HAND_GLASS = RenderPipeline.builder()
             .withLocation(Identifier.parse("alexdlc:pipeline/post/hand_glass"))
@@ -322,6 +325,14 @@ public final class PostPipelines {
             "nebula", "nebula", CompareOp.GREATER_THAN_OR_EQUAL);
     public static final RenderPipeline BLOCK_OUTLINE_NEBULA_THROUGH = blockOutlinePipeline(
             "nebula_through", "nebula", CompareOp.ALWAYS_PASS);
+    public static final RenderPipeline BLOCK_OUTLINE_AURORA = blockOutlinePipeline(
+            "aurora", "aurora", CompareOp.GREATER_THAN_OR_EQUAL);
+    public static final RenderPipeline BLOCK_OUTLINE_AURORA_THROUGH = blockOutlinePipeline(
+            "aurora_through", "aurora", CompareOp.ALWAYS_PASS);
+    public static final RenderPipeline BLOCK_OUTLINE_PULSE = blockOutlinePipeline(
+            "pulse", "pulse", CompareOp.GREATER_THAN_OR_EQUAL);
+    public static final RenderPipeline BLOCK_OUTLINE_PULSE_THROUGH = blockOutlinePipeline(
+            "pulse_through", "pulse", CompareOp.ALWAYS_PASS);
 
     public static final GpuFormat SKY_CLOUDS_FORMAT = GpuFormat.RGBA16_FLOAT;
 
@@ -331,6 +342,12 @@ public final class PostPipelines {
             "sky_clouds_nebula", "alexdlc:world/sky/clouds_nebula");
     public static final RenderPipeline WORLD_SKY_CLOUDS_PLASMA = skyCloudsPipeline(
             "sky_clouds_plasma", "alexdlc:world/sky/clouds_plasma");
+    public static final RenderPipeline WORLD_SKY_CLOUDS_AURORA = skyCloudsPipeline(
+            "sky_clouds_aurora", "alexdlc:world/sky/clouds_aurora");
+    public static final RenderPipeline WORLD_SKY_CLOUDS_GALAXY = skyCloudsPipeline(
+            "sky_clouds_galaxy", "alexdlc:world/sky/clouds_galaxy");
+    public static final RenderPipeline WORLD_SKY_CLOUDS_SUNSET = skyCloudsPipeline(
+            "sky_clouds_sunset", "alexdlc:world/sky/clouds_sunset");
 
     public static final RenderPipeline WORLD_SKY_DEEP_SPACE = worldPostPipeline(
             "sky_deep_space",
@@ -347,10 +364,20 @@ public final class PostPipelines {
             "alexdlc:world/sky/plasma",
             WORLD_SKY_LAYOUT
     );
-    public static final RenderPipeline WORLD_SATURATION = worldPostPipeline(
-            "saturation",
-            "alexdlc:post/world_saturation",
-            SATURATION_LAYOUT
+    public static final RenderPipeline WORLD_SKY_AURORA = worldPostPipeline(
+            "sky_aurora",
+            "alexdlc:world/sky/aurora",
+            WORLD_SKY_LAYOUT
+    );
+    public static final RenderPipeline WORLD_SKY_GALAXY = worldPostPipeline(
+            "sky_galaxy",
+            "alexdlc:world/sky/galaxy",
+            WORLD_SKY_LAYOUT
+    );
+    public static final RenderPipeline WORLD_SKY_SUNSET = worldPostPipeline(
+            "sky_sunset",
+            "alexdlc:world/sky/sunset",
+            WORLD_SKY_LAYOUT
     );
 
     public static final RenderPipeline CHAMS_SOLID = chamsPipeline(
@@ -359,6 +386,16 @@ public final class PostPipelines {
             "plasma", "alexdlc:post/chams_plasma", CHAMS_MASK_STYLE_LAYOUT, BlendFunction.TRANSLUCENT);
     public static final RenderPipeline CHAMS_NEBULA = chamsPipeline(
             "nebula", "alexdlc:post/chams_nebula", CHAMS_MASK_STYLE_LAYOUT, BlendFunction.TRANSLUCENT);
+    public static final RenderPipeline CHAMS_AURORA = chamsPipeline(
+            "aurora", "alexdlc:post/chams_aurora", CHAMS_MASK_STYLE_LAYOUT, BlendFunction.TRANSLUCENT);
+    public static final RenderPipeline CHAMS_PRISM = chamsPipeline(
+            "prism", "alexdlc:post/chams_prism", CHAMS_MASK_STYLE_LAYOUT, BlendFunction.TRANSLUCENT);
+    public static final RenderPipeline CHAMS_HOLOGRAM = chamsPipeline(
+            "hologram", "alexdlc:post/chams_hologram", CHAMS_MASK_STYLE_LAYOUT, BlendFunction.TRANSLUCENT);
+    public static final RenderPipeline CHAMS_LIQUID = chamsPipeline(
+            "liquid", "alexdlc:post/chams_liquid", CHAMS_MASK_STYLE_LAYOUT, BlendFunction.TRANSLUCENT);
+    public static final RenderPipeline CHAMS_SILK = chamsPipeline(
+            "silk", "alexdlc:post/chams_silk", CHAMS_MASK_STYLE_LAYOUT, BlendFunction.TRANSLUCENT);
     public static final RenderPipeline CHAMS_GLASS = chamsPipeline(
             "glass", "alexdlc:post/chams_glass", CHAMS_GLASS_LAYOUT, BlendFunction.TRANSLUCENT);
     public static final RenderPipeline CHAMS_OUTLINE = chamsPipeline(
@@ -390,6 +427,20 @@ public final class PostPipelines {
     );
 
     public static final GpuFormat EFFECT_FORMAT = GpuFormat.RGBA8_UNORM;
+
+    private static RenderPipeline handFillPipeline(String name, String fragment) {
+        return RenderPipeline.builder()
+                .withLocation(Identifier.parse("alexdlc:pipeline/post/hand_" + name))
+                .withVertexShader(Identifier.parse("alexdlc:post/blurs/kawase_common"))
+                .withFragmentShader(Identifier.parse(fragment))
+                .withBindGroupLayout(HAND_FILL_LAYOUT)
+                .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                .withDepthStencilState(Optional.<DepthStencilState>empty())
+                .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
+                .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
+                .withCull(false)
+                .build();
+    }
 
     private static RenderPipeline blockOutlinePipeline(String name,
                                                        String fragment,

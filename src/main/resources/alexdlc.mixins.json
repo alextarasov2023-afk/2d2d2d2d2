@@ -49,7 +49,6 @@
     "render.CameraMixin",
     "render.EntityRenderDispatcherMixin",
     "render.EntityRendererMixin",
-    "render.FogRendererMixin",
     "render.GameRendererMixin",
     "render.GlDeviceMixin",
     "render.ItemEntityRenderStateMixin",
@@ -63,7 +62,6 @@
     "render.ScreenEffectRendererMixin",
     "render.VulkanDeviceMixin",
     "world.BlockLightEngineMixin",
-    "world.ClientClockManagerMixin",
     "world.ClientLevelMixin",
     "world.LevelMixin"
   ],

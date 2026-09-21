@@ -34,6 +34,11 @@ public final class ChamsFeature extends Feature {
 
     public static final String SHADER_PLASMA = "Plasma";
     public static final String SHADER_NEBULA = "Nebula";
+    public static final String SHADER_AURORA = "Aurora";
+    public static final String SHADER_PRISM = "Prism";
+    public static final String SHADER_LIQUID = "Liquid Metal";
+    public static final String SHADER_HOLOGRAM = "Hologram";
+    public static final String SHADER_SILK = "Silk";
 
     public static final String MODE_EXTERNAL = "External";
     public static final String MODE_INTERNAL = "Internal";
@@ -79,7 +84,12 @@ public final class ChamsFeature extends Feature {
             "Shader",
             SHADER_PLASMA,
             SHADER_PLASMA,
-            SHADER_NEBULA
+            SHADER_NEBULA,
+            SHADER_AURORA,
+            SHADER_PRISM,
+            SHADER_LIQUID,
+            SHADER_HOLOGRAM,
+            SHADER_SILK
     ).configKey("render.chams.shader").visibleWhen(this::hasShaderFill));
     public final NumberSetting shaderSpeed = register(new NumberSetting(
             "Shader Speed",

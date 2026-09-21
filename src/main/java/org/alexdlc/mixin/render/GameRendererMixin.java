@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import org.alexdlc.context.RenderContext;
+import org.alexdlc.feature.impl.visual.GlowHandsFeature;
 import org.alexdlc.feature.impl.visual.RemovalsFeature;
 import org.alexdlc.feature.FeatureManager;
 import org.alexdlc.feature.impl.visual.ShaderHandsFeature;
@@ -17,6 +18,7 @@ import org.alexdlc.event.EventManager;
 import org.alexdlc.event.Events;
 import org.alexdlc.event.events.render.Render3DEvent;
 import org.alexdlc.utils.render.Render3DUtil;
+import org.alexdlc.utils.render.world.GlowHandsRenderer;
 import org.alexdlc.utils.render.world.ShaderHandsRenderer;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
@@ -30,6 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
     private static ShaderHandsRenderer shaderHandsRenderer;
+    private static GlowHandsRenderer glowHandsRenderer;
     @Shadow
     @Final
     private Minecraft minecraft;
@@ -51,6 +54,31 @@ public abstract class GameRendererMixin {
         if (RemovalsFeature.shouldRemoveShaking()) {
             ci.cancel();
         }
+    }
+
+    @WrapOperation(
+            method = "renderItemInHand",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;renderAllFeatures(Lnet/minecraft/client/renderer/SubmitNodeStorage;)V"
+            )
+    )
+    private void renderGlowHands(FeatureRenderDispatcher dispatcher,
+                                 SubmitNodeStorage storage,
+                                 Operation<Void> original) {
+        GlowHandsFeature feature = FeatureManager.INSTANCE.getEnabled(GlowHandsFeature.class);
+        if (feature == null) {
+            if (glowHandsRenderer != null) {
+                glowHandsRenderer.release();
+                glowHandsRenderer = null;
+            }
+            original.call(dispatcher, storage);
+            return;
+        }
+        if (glowHandsRenderer == null) {
+            glowHandsRenderer = new GlowHandsRenderer();
+        }
+        glowHandsRenderer.render(feature, () -> original.call(dispatcher, storage));
     }
 
     @WrapOperation(

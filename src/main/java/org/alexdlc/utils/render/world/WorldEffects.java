@@ -6,10 +6,11 @@ import org.alexdlc.feature.impl.visual.BlockOutlineFeature;
 import org.alexdlc.feature.impl.visual.ChamsFeature;
 import org.alexdlc.feature.impl.visual.HitParticlesFeature;
 import org.alexdlc.feature.impl.visual.JumpCirclesFeature;
+import org.alexdlc.feature.impl.visual.ParticleRainFeature;
 import org.alexdlc.feature.impl.visual.PopChamsFeature;
+import org.alexdlc.feature.impl.visual.ShaderSkyFeature;
 import org.alexdlc.feature.impl.visual.TrajectoriesFeature;
 import org.alexdlc.feature.impl.visual.WorldParticlesFeature;
-import org.alexdlc.feature.impl.visual.WorldTweaksFeature;
 import org.alexdlc.utils.render.chams.ChamsPipeline;
 import org.alexdlc.utils.render.chams.PopChamsRenderer;
 import org.alexdlc.utils.render.target.TargetMarkers;
@@ -29,10 +30,10 @@ public final class WorldEffects {
         }
 
         register(WorldEffect.lazy(
-                () -> gate(WorldTweaksFeature.getEnabled(), WorldTweaksFeature::usesSky),
-                WorldTweaksRenderer::new,
-                (feature, renderer, context) -> renderer.renderSky(feature, context.cameraRenderState()),
-                WorldTweaksRenderer::release
+                ShaderSkyFeature::getEnabled,
+                WorldSkyRenderer::new,
+                (feature, renderer, context) -> renderer.render(feature, context.cameraRenderState()),
+                WorldSkyRenderer::release
         ));
 
         register(WorldEffect.lazy(
@@ -91,10 +92,10 @@ public final class WorldEffects {
         ));
 
         register(WorldEffect.lazy(
-                () -> gate(WorldTweaksFeature.getEnabled(), WorldTweaksFeature::usesSaturation),
-                WorldTweaksRenderer::new,
-                (feature, renderer, context) -> renderer.renderSaturation(feature),
-                WorldTweaksRenderer::release
+                ParticleRainFeature::getEnabled,
+                ParticleRainRenderer::new,
+                (feature, renderer, context) -> renderer.render(feature),
+                ParticleRainRenderer::release
         ));
     }
 

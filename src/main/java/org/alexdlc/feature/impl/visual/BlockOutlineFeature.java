@@ -20,6 +20,8 @@ public final class BlockOutlineFeature extends Feature {
     public static final String VARIANT_GLOSSY = "Glossy Gradients";
     public static final String VARIANT_DEEP_SPACE = "Deep Space";
     public static final String VARIANT_NEBULA = "Nebula";
+    public static final String VARIANT_AURORA = "Aurora";
+    public static final String VARIANT_PULSE = "Heartbeat Pulse";
 
     public final ModeSetting mode = register(new ModeSetting(
             "Mode",
@@ -35,7 +37,9 @@ public final class BlockOutlineFeature extends Feature {
             VARIANT_PRISMATIC,
             VARIANT_GLOSSY,
             VARIANT_DEEP_SPACE,
-            VARIANT_NEBULA
+            VARIANT_NEBULA,
+            VARIANT_AURORA,
+            VARIANT_PULSE
     ).configKey("render.blockoutline.variant").visibleWhen(this::usesShader));
     public final ModeSetting colorMode = register(ColorMode.setting()
             .configKey("render.blockoutline.tintMode")

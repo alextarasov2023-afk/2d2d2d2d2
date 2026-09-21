@@ -125,6 +125,7 @@ public final class MenuText {
 
     private static final Map<String, String> SETTING_RU = Map.ofEntries(
             Map.entry("Action", "Действие"),
+            Map.entry("Accent Color", "Акцентный цвет"),
             Map.entry("Additive Glow", "Аддитивное свечение"),
             Map.entry("Aim Range", "Дополнительная дальность наведения"),
             Map.entry("Animation Speed", "Скорость анимации выбора"),
@@ -156,8 +157,11 @@ public final class MenuText {
             Map.entry("Cooldown Animation", "Анимация перезарядки атаки"),
             Map.entry("Cooldown Gap Multiplier", "Расширение при перезарядке"),
             Map.entry("CPS", "CPS"),
+            Map.entry("Custom Color", "Свой цвет"),
             Map.entry("Dangers", "Опасности"),
             Map.entry("Delay", "Задержка"),
+            Map.entry("Drop Size", "Размер капли"),
+            Map.entry("Fall Speed", "Скорость падения"),
             Map.entry("Dim Rejected", "Затемнять отклонённые лоты"),
             Map.entry("Distance", "Дистанция"),
             Map.entry("Distortion", "Искажение"),
@@ -184,8 +188,11 @@ public final class MenuText {
             Map.entry("Gap", "Отступ"),
             Map.entry("Glass Blur", "Размытие стекла"),
             Map.entry("Glow", "Свечение"),
+            Map.entry("Glow Color", "Цвет свечения"),
+            Map.entry("Glow Drops", "Свечение капель"),
             Map.entry("Glow Radius", "Радиус свечения"),
             Map.entry("Glow Strength", "Сила свечения"),
+            Map.entry("Ground Ripples", "Круги на земле"),
             Map.entry("Health", "Здоровье"),
             Map.entry("Health Bar", "Полоса здоровья"),
             Map.entry("Highlight Don Items", "Подсвечивать донат-предметы"),
@@ -213,7 +220,9 @@ public final class MenuText {
             Map.entry("Light Style", "Стиль освещения"),
             Map.entry("Max Brightness", "Максимальная яркость"),
             Map.entry("Max Effect Level", "Максимальный уровень эффекта"),
+            Map.entry("Max Drops", "Максимум капель"),
             Map.entry("Max Particles", "Максимум частиц"),
+            Map.entry("Mirror Reflection", "Зеркальное отражение"),
             Map.entry("Min Brightness", "Минимальная яркость"),
             Map.entry("Minimum Health", "Минимальное здоровье"),
             Map.entry("Min Depth Strider", "Мин. уровень Подводной ходьбы"),
@@ -257,6 +266,8 @@ public final class MenuText {
             Map.entry("Right X", "Правая рука X"),
             Map.entry("Right Y", "Правая рука Y"),
             Map.entry("Right Z", "Правая рука Z"),
+            Map.entry("Ripple Radius", "Радиус кругов"),
+            Map.entry("Ripple Time", "Длительность кругов"),
             Map.entry("Rotation", "Ротация"),
             Map.entry("Rounded", "Скруглять рамку"),
             Map.entry("Saturation", "Насыщенность"),
@@ -275,6 +286,8 @@ public final class MenuText {
             Map.entry("Slots", "Количество слотов"),
             Map.entry("Smart Criticals", "Умные критические удары"),
             Map.entry("Sounds", "Звуки"),
+            Map.entry("Smooth Trail", "Плавный шлейф"),
+            Map.entry("Spawn Height", "Высота появления"),
             Map.entry("Spawn Radius", "Радиус появления"),
             Map.entry("Spawn Rate", "Интервал появления"),
             Map.entry("Speed", "Скорость"),
@@ -293,6 +306,7 @@ public final class MenuText {
             Map.entry("Tint", "Оттенок"),
             Map.entry("TPS Sync", "Синхронизация TPS"),
             Map.entry("Through Walls", "Сквозь стены"),
+            Map.entry("Trail Length", "Длина шлейфа"),
             Map.entry("Trigger Distance", "Дистанция срабатывания"),
             Map.entry("Type", "Тип"),
             Map.entry("Use Inventory", "Использовать инвентарь"),
@@ -502,9 +516,10 @@ public final class MenuText {
 
     private static final Map<String, String> SETTING_CONTEXT_RU = Map.ofEntries(
             Map.entry("Chams/Effect", "Эффекты"),
-            Map.entry("WorldTweaks/Effect", "Эффект"),
+            Map.entry("Chams/Shader", "Эффект"),
+            Map.entry("ShaderHands/Shader", "Шейдер"),
+            Map.entry("ShaderSky/Shader", "Шейдер"),
             Map.entry("WallClimb/Speed", "Скорость подъёма"),
-            Map.entry("WorldTweaks/Speed", "Скорость эффекта"),
             Map.entry("SwingAnimation/Speed", "Длительность взмаха"),
             Map.entry("CreeperFarm/Attack Range", "Дальность атаки")
     );
@@ -557,8 +572,14 @@ public final class MenuText {
                     "Добавляет анимации рук и предметов от первого лица"),
             Map.entry("Store items in the crafting grid", "Позволяет хранить предметы в сетке крафта"),
             Map.entry("Custom cosmetic capes visible on you", "Добавляет видимые на вас косметические плащи"),
-            Map.entry("Renders a colored silhouette over your first-person hands",
-                    "Накладывает цветной шейдерный силуэт на руки от первого лица"),
+            Map.entry("Paints your first-person hands with an animated shader",
+                    "Накладывает на руки от первого лица анимированный шейдер"),
+            Map.entry("Replaces the sky with a beautiful animated shader",
+                    "Заменяет небо красивым анимированным шейдером"),
+            Map.entry("Hands emit a strong glow that follows the held item color, with a smooth trail",
+                    "Руки излучают сильное свечение в цвете предмета, с плавным шлейфом"),
+            Map.entry("3D drops fall from the sky and ripple on the ground like jump circles",
+                    "3D-капли падают с неба и расходятся по земле кругами, как кольца прыжков"),
             Map.entry("Animated shader over the selected block", "Отображает анимированный шейдер на выбранном блоке"),
             Map.entry("Points toward players outside the visible screen",
                     "Указывает направление к игрокам за пределами экрана"),
@@ -631,6 +652,7 @@ public final class MenuText {
             Map.entry("All", "Все параметры"),
             Map.entry("Animals", "Животные"),
             Map.entry("Anchor", "Якорь возрождения"),
+            Map.entry("Aurora", "Сияние"),
             Map.entry("AppIcon", "AppIcon"),
             Map.entry("Armor", "Броня"),
             Map.entry("ASCII", "ASCII"),
@@ -667,6 +689,12 @@ public final class MenuText {
             ,Map.entry("Custom", "Свой цвет")
             ,Map.entry("Custom Password", "Пользовательский пароль")
             ,Map.entry("Day", "День")
+            ,Map.entry("Galaxy", "Галактика")
+            ,Map.entry("Hologram", "Голограмма")
+            ,Map.entry("Heartbeat Pulse", "Пульс")
+            ,Map.entry("Item", "Предмет")
+            ,Map.entry("Liquid Metal", "Жидкий металл")
+            ,Map.entry("Magic", "Магия")
             ,Map.entry("Deep Space", "Глубокий космос")
             ,Map.entry("Default", "Стандартный")
             ,Map.entry("Disconnect", "Отключиться")
@@ -715,6 +743,7 @@ public final class MenuText {
             ,Map.entry("Outline", "Обводка")
             ,Map.entry("Passive", "Мирные")
             ,Map.entry("Players", "Игроки")
+            ,Map.entry("Prism", "Призма")
             ,Map.entry("Prismatic Flow", "Призматический поток")
             ,Map.entry("Projectiles", "Снаряды")
             ,Map.entry("Pumpkins", "Тыквы")
@@ -725,6 +754,7 @@ public final class MenuText {
             ,Map.entry("Shader", "Шейдер")
             ,Map.entry("Shader Fill", "Шейдерная заливка")
             ,Map.entry("Shaking", "Тряска от урона")
+            ,Map.entry("Silk", "Шёлк")
             ,Map.entry("Slice", "Рубящий удар")
             ,Map.entry("Snowflakes", "Снежинки")
             ,Map.entry("Solid", "Сплошная заливка")

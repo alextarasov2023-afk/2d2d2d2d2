@@ -52,13 +52,15 @@ import org.alexdlc.feature.impl.visual.HudFeature;
 import org.alexdlc.feature.impl.visual.ItemPhysicsFeature;
 import org.alexdlc.feature.impl.visual.JumpCirclesFeature;
 import org.alexdlc.feature.impl.visual.NameTagsFeature;
+import org.alexdlc.feature.impl.visual.GlowHandsFeature;
+import org.alexdlc.feature.impl.visual.ParticleRainFeature;
 import org.alexdlc.feature.impl.visual.PopChamsFeature;
 import org.alexdlc.feature.impl.visual.RemovalsFeature;
 import org.alexdlc.feature.impl.visual.ShaderHandsFeature;
+import org.alexdlc.feature.impl.visual.ShaderSkyFeature;
 import org.alexdlc.feature.impl.visual.SwingAnimationFeature;
 import org.alexdlc.feature.impl.visual.TrajectoriesFeature;
 import org.alexdlc.feature.impl.visual.ViewModelFeature;
-import org.alexdlc.feature.impl.visual.WorldTweaksFeature;
 import org.alexdlc.feature.impl.visual.WorldParticlesFeature;
 import org.alexdlc.feature.setting.BindSetting;
 import org.lwjgl.glfw.GLFW;
@@ -139,9 +141,11 @@ public final class FeatureManager {
                 new ShaderHandsFeature(),
                 new BlockOutlineFeature(),
                 new ChamsFeature(),
+                new ShaderSkyFeature(),
+                new GlowHandsFeature(),
+                new ParticleRainFeature(),
                 new HoldMyItemsFeature(),
                 new ItemPhysicsFeature(),
-                new WorldTweaksFeature(),
                 new NoDelaysFeature(),
                 new DeathCoordsFeature(),
                 new XCarryFeature(),
