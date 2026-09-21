@@ -28,20 +28,6 @@ jobs:
           set -o pipefail
           ./gradlew build --no-daemon --stacktrace 2>&1 | tee gradle-build.log
 
-      - name: Publish build log
-        if: always()
-        run: |
-          git config user.name "build-logger"
-          git config user.email "build-logger@users.noreply.github.com"
-          git checkout -B build-logs
-          rm -f build-log.txt
-          cp gradle-build.log build-log.txt 2>/dev/null || echo "no gradle log" > build-log.txt
-          git add build-log.txt
-          git commit -m "build log for run ${{ github.run_id }}" || true
-          git push --force origin HEAD:build-logs
-        env:
-          GH_TOKEN: ${{ github.token }}
-
       - name: List outputs
         if: success()
         run: ls -la build/libs
@@ -74,5 +60,32 @@ jobs:
             --title "alexdlc build (${SHA})" \
             --notes "Automatic build of commit ${SHA}. Minecraft 26.2, Fabric." \
             --prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Publish build log
+        if: always()
+        continue-on-error: true
+        run: |
+          set -x
+          git config user.name "build-logger"
+          git config user.email "build-logger@users.noreply.github.com"
+          {
+            echo "## build log for run ${{ github.run_id }} (${GITHUB_SHA})"
+            echo '```'
+            if [ -f gradle-build.log ]; then
+              tail -c 30000 gradle-build.log
+            else
+              echo "no gradle log produced"
+            fi
+            echo '```'
+          } > log-comment.md
+          gh issue comment 2 --repo "$GITHUB_REPOSITORY" --body-file log-comment.md
+          # best effort: also keep the full log on a dedicated branch
+          git checkout -B build-logs || true
+          cp gradle-build.log build-log.txt 2>/dev/null || echo "no gradle log" > build-log.txt
+          git add build-log.txt
+          git commit -m "build log for run ${{ github.run_id }}" || true
+          git push --force origin HEAD:build-logs || true
         env:
           GH_TOKEN: ${{ github.token }}
