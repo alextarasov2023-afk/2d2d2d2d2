@@ -65,16 +65,16 @@ public final class ShaderSkyFeature extends Feature {
     }
 
     public int resolvedColor1() {
-        if (ColorMode.isSync(this.colorMode)) {
-            return 0xFF0A1026;
+        if (ColorMode.isCustom(this.colorMode)) {
+            return this.color1.getValue();
         }
-        return this.color1.getValue();
+        return 0xFF0A1026;
     }
 
     public int resolvedColor2() {
-        if (ColorMode.isSync(this.colorMode)) {
-            return 0xFF6FE3FF;
+        if (ColorMode.isCustom(this.colorMode)) {
+            return this.color2.getValue();
         }
-        return this.color2.getValue();
+        return 0xFF6FE3FF;
     }
 }

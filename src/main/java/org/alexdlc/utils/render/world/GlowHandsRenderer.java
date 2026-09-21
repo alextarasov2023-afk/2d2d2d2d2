@@ -52,13 +52,6 @@ public final class GlowHandsRenderer {
             .putVec4()
             .putFloat()
             .get();
-    private static final int[] DYE_RGB = {
-            0xFF990000, 0xFFFF5555, 0xFFCC00CC, 0xFF333399,
-            0xFF191970, 0xFF109C15, 0xFFE4E467, 0xFF616161,
-            0xFF333333, 0xFF4E4E4E, 0xFF404EAA, 0xFF7C2D12,
-            0xFF1565C0, 0xFF222222, 0xFFF8F8F8, 0xFFD800D8
-    };
-
     private final GpuBuffer maskUniforms = uniformBuffer("Alex DLC GlowHands Mask UBO", MASK_UNIFORM_SIZE);
     private final GpuBuffer haloUniforms = uniformBuffer("Alex DLC GlowHands Halo UBO", HALO_UNIFORM_SIZE);
     private final GpuBuffer trailUniforms = uniformBuffer("Alex DLC GlowHands Trail UBO", TRAIL_UNIFORM_SIZE);
@@ -333,11 +326,25 @@ public final class GlowHandsRenderer {
 
         Item item = stack.getItem();
         if (item instanceof DyeItem dye) {
-            int id = dye.getColor().getId();
-            if (id >= 0 && id < DYE_RGB.length) {
-                return DYE_RGB[id];
-            }
-            return feature.customColor();
+            return switch (dye.getColor().name()) {
+                case "RED" -> 0xFFA10000;
+                case "ORANGE" -> 0xFFF07613;
+                case "WHITE" -> 0xFFF4F4F4;
+                case "YELLOW" -> 0xFFFACE35;
+                case "LIME" -> 0xFF70B919;
+                case "GREEN" -> 0xFF00A000;
+                case "PINK" -> 0xFFF773CF;
+                case "GRAY" -> 0xFF3F3F3F;
+                case "LIGHT_GRAY", "LIGHT_GREY" -> 0xFF909090;
+                case "CYAN" -> 0xFF15898D;
+                case "PURPLE" -> 0xFF6F10A2;
+                case "BLUE" -> 0xFF3700B3;
+                case "BROWN" -> 0xFF814418;
+                case "LIGHT_BLUE", "AQUA" -> 0xFF26C7DB;
+                case "MAGENTA" -> 0xFFB31DAC;
+                case "BLACK" -> 0xFF141519;
+                default -> feature.customColor();
+            };
         }
         int tint = minecraft.itemColors.getColor(stack, 0);
         if ((tint & 0xFFFFFF) != 0xFFFFFF && (tint & 0xFFFFFF) != 0) {

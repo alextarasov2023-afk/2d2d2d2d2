@@ -54,7 +54,7 @@ public final class ParticleRainRenderer {
         double radius = feature.radius.getValue();
         double height = feature.height.getValue();
         double fallSpeed = feature.fallSpeed.getValue();
-        int maxDrops = (int) feature.maxDrops.getValue();
+        int maxDrops = feature.maxDrops.getValue().intValue();
         double dropSize = feature.size.getValue();
         Vec3 playerPos = minecraft.player.position();
         double cullDistance = radius * 2.0 + 8.0;
@@ -101,14 +101,14 @@ public final class ParticleRainRenderer {
                     to,
                     ClipContext.Block.COLLIDER,
                     ClipContext.Fluid.NONE,
-                    null
+                    minecraft.player
             ));
             if (hit.getType() == BlockHitResult.Type.BLOCK) {
                 if (feature.ripples.getValue()) {
                     Ripple ripple = new Ripple();
                     ripple.position = hit.getPosition();
                     ripple.startNanos = now;
-                    ripple.radius = (float) feature.rippleRadius.getValue();
+                    ripple.radius = feature.rippleRadius.getValue().floatValue();
                     this.ripples.add(ripple);
                 }
                 iterator.remove();
@@ -132,7 +132,7 @@ public final class ParticleRainRenderer {
 
         // Age the ripples and draw them like jump circles.
         float time = System.currentTimeMillis() / 1000.0F;
-        float rippleTime = (float) feature.rippleTime.getValue();
+        float rippleTime = feature.rippleTime.getValue().floatValue();
         Iterator<Ripple> rippleIterator = this.ripples.iterator();
         while (rippleIterator.hasNext()) {
             Ripple ripple = rippleIterator.next();
@@ -146,7 +146,7 @@ public final class ParticleRainRenderer {
                     ripple.position,
                     ripple.radius * (0.25F + 0.75F * eased),
                     (1.0F - progress) * 0.9F,
-                    time + ripple.position.x() * 0.13F,
+                    time + (float) (ripple.position.x() * 0.13D),
                     color,
                     true
             );
