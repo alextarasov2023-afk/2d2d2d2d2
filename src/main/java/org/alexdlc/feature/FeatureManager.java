@@ -43,6 +43,7 @@ import org.alexdlc.feature.impl.pve.*;
 import org.alexdlc.feature.impl.pve.autowarden.AutoWardenFeature;
 import org.alexdlc.feature.impl.visual.ArrowsFeature;
 import org.alexdlc.feature.impl.visual.BlockOutlineFeature;
+import org.alexdlc.feature.impl.visual.CapeFeature;
 import org.alexdlc.feature.impl.visual.ChamsFeature;
 import org.alexdlc.feature.impl.visual.CrosshairFeature;
 import org.alexdlc.feature.impl.visual.EntityEspFeature;
@@ -124,6 +125,7 @@ public final class FeatureManager {
                 new VelocityFeature(),
                 new BowAimbotFeature(),
                 new HudFeature(),
+                new CapeFeature(),
                 new ArrowsFeature(),
                 new EntityEspFeature(),
                 new NameTagsFeature(),
