@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "alexdlc",
+  "version": "${version}",
+  "name": "Alex DLC",
+  "description": "Cyberpunk Matrix Edition",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/alexdlc/textures/gui/icon_16.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "org.alexdlc.AlexDlc"
+    ]
+  },
+  "jars": [],
+  "mixins": [
+    "alexdlc.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "baritone": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

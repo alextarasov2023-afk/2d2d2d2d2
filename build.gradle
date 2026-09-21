@@ -1,0 +1,154 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+def bundledModsDir = file("bundled-mods")
+def bundledModJars = bundledModsDir.exists()
+        ? bundledModsDir.listFiles().findAll { it.isFile() && it.name.endsWith(".jar") }.sort { it.name }
+        : []
+def baritoneModJar = bundledModJars.find { it.name.startsWith("baritone-fabric-") }
+def bundledModsJson = groovy.json.JsonOutput.toJson(
+        bundledModJars.collect { [file: "META-INF/jars/${it.name}"] }
+)
+
+repositories {
+    mavenCentral()
+}
+
+loom {
+    mods {
+        "alexdlc" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+
+dependencies {
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "com.github.weisj:jsvg:2.1.0"
+    include "com.github.weisj:jsvg:2.1.0"
+
+    bundledModJars.each { bundledModJar ->
+        localRuntime(files(bundledModJar))
+    }
+    if (baritoneModJar != null) {
+        compileOnly(files(baritoneModJar))
+    }
+
+    compileOnly "org.projectlombok:lombok:1.18.46"
+    annotationProcessor "org.projectlombok:lombok:1.18.46"
+
+    testImplementation platform("org.junit:junit-bom:5.12.2")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+    useJUnitPlatform()
+    enabled = false
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "loader_version", project.loader_version
+    inputs.property "bundled_mods_json", bundledModsJson
+    filteringCharset "UTF-8"
+
+    def modVersion = project.version.toString()
+    def minecraftVersion = project.minecraft_version.toString()
+    def loaderVersion = project.loader_version.toString()
+    filesMatching("fabric.mod.json") {
+        expand "version": modVersion,
+                "minecraft_version": minecraftVersion,
+                "loader_version": loaderVersion
+    }
+
+    def resolvedBundledModsJson = bundledModsJson
+    doLast { task ->
+        def modJsonFile = new File(task.destinationDir, "fabric.mod.json")
+        if (modJsonFile.exists()) {
+            def slurper = new groovy.json.JsonSlurper()
+            def modJson = slurper.parse(modJsonFile, "UTF-8")
+            modJson.jars = slurper.parseText(resolvedBundledModsJson)
+            modJsonFile.setText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(modJson)), "UTF-8")
+        }
+    }
+}
+
+// Offline GLSL validation of the bundled shaders; skipped when glslang is not installed.
+tasks.register("validateShaders", Exec) {
+    group = "verification"
+    description = "Validates alex dlc shaders with glslang (skipped if glslang is not on PATH)."
+    inputs.dir("src/main/resources/assets/alexdlc/shaders")
+    inputs.file("scripts/validate_shaders.py")
+    commandLine "python", "scripts/validate_shaders.py"
+    onlyIf {
+        file("scripts/validate_shaders.py").exists() && System.getenv("CI") == null && {
+            def path = System.getenv("PATH") ?: ""
+            path.split(File.pathSeparator).any { dir ->
+                new File(dir, "glslang").canExecute() || new File(dir, "glslang.exe").canExecute()
+            }
+        }()
+    }
+}
+
+tasks.named("check") {
+    dependsOn "validateShaders"
+}
+
+def targetJavaVersion = 25
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        it.options.release.set(targetJavaVersion)
+    }
+}
+
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archives_base_name}" }
+    }
+    from("third-party/baritone") {
+        include "LICENSE-LGPL-3.0.txt", "SOURCE.md"
+        into "META-INF/licenses/baritone"
+    }
+
+    if (!bundledModJars.isEmpty()) {
+        from(bundledModJars) {
+            into "META-INF/jars"
+        }
+    }
+}
+
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
+            from components.java
+        }
+    }
+}
+
+

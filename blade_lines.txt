@@ -1,0 +1,163 @@
+src\main\java\org\alexdlc\command\impl\HelpCommand.java:19: ChatUtil.header("Blade commands");
+src\main\java\org\alexdlc\feature\FeatureManager.java:90: Thread thread = new Thread(runnable, "Blade Config Writer");
+src\main\java\org\alexdlc\feature\FeatureManager.java:190: Runtime.getRuntime().addShutdownHook(new Thread(this::flushPendingSave, "Blade Config Flush"));
+src\main\java\org\alexdlc\feature\impl\misc\NameProtectFeature.java:9: public final TextSetting name = register(new TextSetting("Name", "BladeUser", 32));
+src\main\java\org\alexdlc\feature\impl\pve\AutoFishFeature.java:190: boolean biting = ((FishingHookAccessor) hook).blade$isBiting();
+src\main\java\org\alexdlc\feature\impl\pve\SynchronizationFeature.java:311: .resolve("blade");
+src\main\java\org\alexdlc\feature\impl\pve\autowarden\TelegramNotifier.java:26: private static final String TOKEN_ENV = "BLADE_TELEGRAM_BOT_TOKEN";
+src\main\java\org\alexdlc\feature\impl\pve\autowarden\TelegramNotifier.java:27: private static final String CHAT_ENV = "BLADE_TELEGRAM_CHAT_ID";
+src\main\java\org\alexdlc\feature\impl\pve\autowarden\TelegramNotifier.java:39: .resolve("blade-secrets")
+src\main\java\org\alexdlc\feature\impl\pve\autowarden\TelegramNotifier.java:42: Thread thread = new Thread(runnable, "blade-autowarden-telegram");
+src\main\java\org\alexdlc\feature\impl\pve\autowarden\TelegramNotifier.java:136: token = trimToNull(System.getProperty("blade.telegram.botToken"));
+src\main\java\org\alexdlc\feature\impl\pve\autowarden\TelegramNotifier.java:139: chat = trimToNull(System.getProperty("blade.telegram.chatId"));
+src\main\java\org\alexdlc\hud\TargetElement.java:218: for (ModelPart.Cube cube : ((ModelPartAccessor) (Object) candidate).blade$getCubes()) {
+src\main\java\org\alexdlc\menu\core\MenuHeader.java:267: px(12.0F), "bladecheats.fun")
+src\main\java\org\alexdlc\menu\pages\accounts\AccountPage.java:56: "Byte", "Craft", "Rush", "Fox", "Blade", "Wing", "Strike", "Core", "Drift", "Zap",
+src\main\java\org\alexdlc\mixin\accessor\FishingHookAccessor.java:10: boolean blade$isBiting();
+src\main\java\org\alexdlc\mixin\accessor\ModelPartAccessor.java:12: List<ModelPart.Cube> blade$getCubes();
+src\main\java\org\alexdlc\mixin\core\MinecraftMixin.java:35: private boolean blade$runningTimerTick;
+src\main\java\org\alexdlc\mixin\core\MinecraftMixin.java:50: if (!blade$runningTimerTick && TimerFeature.shouldSkipBaseTick()) {
+src\main\java\org\alexdlc\mixin\core\MinecraftMixin.java:63: if (blade$runningTimerTick || !TimerFeature.consumeExtraTick()) {
+src\main\java\org\alexdlc\mixin\core\MinecraftMixin.java:67: blade$runningTimerTick = true;
+src\main\java\org\alexdlc\mixin\core\MinecraftMixin.java:71: blade$runningTimerTick = false;
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:38: private final IntList blade$glassSplits = new IntArrayList();
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:40: private boolean blade$previousElementWasGlass;
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:43: private void blade$resetGlassSplits(CallbackInfo ci) {
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:44: this.blade$glassSplits.clear();
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:45: this.blade$previousElementWasGlass = false;
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:49: private void blade$markGlassRuns(GuiElementRenderState elementState, CallbackInfo ci) {
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:50: boolean glass = blade$isGlassPipeline(elementState.pipeline());
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:51: if (glass && !this.blade$previousElementWasGlass) {
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:53: this.blade$glassSplits.add(this.draws.size());
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:55: this.blade$previousElementWasGlass = glass;
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:65: private void blade$captureBackdropBeforeGlassRuns(
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:75: for (int i = 0; i < this.blade$glassSplits.size(); i++) {
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:76: int split = this.blade$glassSplits.getInt(i);
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:92: private static boolean blade$isGlassPipeline(RenderPipeline pipeline) {
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:103: private GpuSampler blade$smoothDownscaledItems(
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:109: if (blade$isDownscaled(itemState)) {
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:122: private RenderPipeline blade$bicubicDownscalePipeline(
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:126: if (blade$isDownscaled(itemState)) {
+src\main\java\org\alexdlc\mixin\gui\GuiRendererMixin.java:133: private static boolean blade$isDownscaled(GuiItemRenderState itemState) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:47: private boolean blade$hotbarDecorationsShifted;
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:50: private void blade$shiftHotbarDecorations(GuiGraphicsExtractor guiGraphicsExtractor, DeltaTracker deltaTracker, CallbackInfo ci) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:52: this.blade$hotbarDecorationsShifted = offset != 0.0F;
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:53: if (this.blade$hotbarDecorationsShifted) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:60: private void blade$unshiftHotbarDecorations(GuiGraphicsExtractor guiGraphicsExtractor, DeltaTracker deltaTracker, CallbackInfo ci) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:61: if (this.blade$hotbarDecorationsShifted) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:63: this.blade$hotbarDecorationsShifted = false;
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:74: private void blade$scalePlayerStatus(
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:79: blade$withScaledStatus(guiGraphicsExtractor, () -> original.call(instance, guiGraphicsExtractor));
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:89: private void blade$scaleVehicleStatus(
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:94: blade$withScaledStatus(guiGraphicsExtractor, () -> original.call(instance, guiGraphicsExtractor));
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:98: private void blade$withScaledStatus(GuiGraphicsExtractor guiGraphicsExtractor, Runnable draw) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:119: private void blade$hideVanillaHotbar(GuiGraphicsExtractor guiGraphicsExtractor, DeltaTracker deltaTracker, CallbackInfo ci) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:126: private int blade$alignPlayerHealthRows(int original) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:131: private int blade$alignVehicleHealthRow(int original) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:142: private void blade$skipXpBarBackground(ContextualBar bar, GuiGraphicsExtractor guiGraphicsExtractor, DeltaTracker deltaTracker) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:155: private void blade$skipXpLevel(GuiGraphicsExtractor guiGraphicsExtractor, Font font, int experienceLevel) {
+src\main\java\org\alexdlc\mixin\gui\HudMixin.java:162: private void blade$hideVanillaSelectedItemName(GuiGraphicsExtractor guiGraphicsExtractor, CallbackInfo ci) {
+src\main\java\org\alexdlc\mixin\gui\IconSetMixin.java:20: IoSupplier<InputStream> icon16 = () -> IconSetMixin.class.getResourceAsStream("/assets/blade/textures/gui/icon_16.png");
+src\main\java\org\alexdlc\mixin\gui\IconSetMixin.java:21: IoSupplier<InputStream> icon32 = () -> IconSetMixin.class.getResourceAsStream("/assets/blade/textures/gui/icon_32.png");
+src\main\java\org\alexdlc\mixin\gui\IconSetMixin.java:27: System.err.println("[Blade] Failed to load custom standard icons: " + e.getMessage());
+src\main\java\org\alexdlc\mixin\gui\IconSetMixin.java:34: IoSupplier<InputStream> macIcon = () -> IconSetMixin.class.getResourceAsStream("/assets/blade/textures/gui/icon_mac.png");
+src\main\java\org\alexdlc\mixin\gui\IconSetMixin.java:40: System.err.println("[Blade] Failed to load custom macOS app icon: " + e.getMessage());
+src\main\java\org\alexdlc\pve\economy\LocalSyncTransport.java:57: this.receiver = new Thread(this::receiveLoop, "blade-local-economy-sync");
+src\main\java\org\alexdlc\utils\ConfigIO.java:31: return FabricLoader.getInstance().getConfigDir().resolve("blade");
+src\main\java\org\alexdlc\utils\ScreenNbtParser.java:59: public static final String OUTPUT_FILE = "blade-nbt-parser.jsonl";
+src\main\java\org\alexdlc\utils\render\ClientCape.java:34: Identifier dynamicTextureId = Identifier.fromNamespaceAndPath("blade", "textures/cape/" + fileName);
+src\main\java\org\alexdlc\utils\render\ShaderFallback.java:33: if (!shaderId.getNamespace().equals("blade")) {
+src\main\java\org\alexdlc\utils\render\ShaderFallback.java:37: String source = readClasspath("blade", shaderId.getPath() + extension);
+src\main\java\org\alexdlc\utils\render\chams\ChamsCompositeEffect.java:24: private final GpuBuffer styleUniforms = PostFx.createUniforms("Blade Chams Style UBO", STYLE_SIZE);
+src\main\java\org\alexdlc\utils\render\chams\ChamsCompositeEffect.java:25: private final KawaseBlur maskBlur = new KawaseBlur("blade-chams-mask");
+src\main\java\org\alexdlc\utils\render\chams\ChamsCompositeEffect.java:26: private final KawaseBlur sceneBlur = new KawaseBlur("blade-chams-scene");
+src\main\java\org\alexdlc\utils\render\chams\ChamsCompositeEffect.java:27: private final PostTarget sceneCopy = new PostTarget("blade-chams-scene-copy", PostPipelines.EFFECT_FORMAT, false);
+src\main\java\org\alexdlc\utils\render\chams\ChamsCompositeEffect.java:79: stylePass("Blade Chams Glass", PostPipelines.CHAMS_GLASS, output, pass -> {
+src\main\java\org\alexdlc\utils\render\chams\ChamsCompositeEffect.java:85: stylePass("Blade Chams Solid", PostPipelines.CHAMS_SOLID, output,
+src\main\java\org\alexdlc\utils\render\chams\ChamsCompositeEffect.java:90: "Blade Chams Shader Fill",
+src\main\java\org\alexdlc\utils\render\chams\ChamsCompositeEffect.java:100: stylePass("Blade Chams Internal", PostPipelines.CHAMS_INTERNAL, output, pass -> {
+src\main\java\org\alexdlc\utils\render\chams\ChamsCompositeEffect.java:106: stylePass("Blade Chams Outline", PostPipelines.CHAMS_OUTLINE, output,
+src\main\java\org\alexdlc\utils\render\chams\ChamsCompositeEffect.java:112: "Blade Chams Glow",
+src\main\java\org\alexdlc\utils\render\chams\ChamsMaskRenderer.java:154: "blade-chams-mask",
+src\main\java\org\alexdlc\utils\render\chams\PopChamsCompositeEffect.java:16: private final KawaseBlur blur = new KawaseBlur("blade-popchams");
+src\main\java\org\alexdlc\utils\render\chams\PopChamsCompositeEffect.java:30: this.compositeUniforms = PostFx.createUniforms("Blade PopChams Composite UBO", COMPOSITE_SIZE);
+src\main\java\org\alexdlc\utils\render\chams\PopChamsCompositeEffect.java:54: PostFx.pass("Blade PopChams Composite", PostPipelines.POPCHAMS_COMPOSITE, output, pass -> {
+src\main\java\org\alexdlc\utils\render\chams\PopChamsRenderer.java:220: "blade-popchams-mask",
+src\main\java\org\alexdlc\utils\render\chams\PopChamsRenderTypes.java:37: return RenderType.create("blade_popchams_" + kind.name().toLowerCase(), setup);
+src\main\java\org\alexdlc\utils\render\gui\BladeGuiPipelines.java:14: public final class BladeGuiPipelines {
+src\main\java\org\alexdlc\utils\render\gui\BladeGuiPipelines.java:81: private BladeGuiPipelines() {
+src\main\java\org\alexdlc\utils\render\gui\GuiBackdrop.java:57: halfTarget = new TextureTarget("blade-gui-backdrop-half", halfWidth, halfHeight, false, GpuFormat.RGBA8_UNORM);
+src\main\java\org\alexdlc\utils\render\gui\GuiBackdrop.java:59: "blade-gui-backdrop-quarter",
+src\main\java\org\alexdlc\utils\render\gui\GuiBackdrop.java:127: () -> "Blade GUI backdrop blur",
+src\main\java\org\alexdlc\utils\render\gui\GuiBackdrop.java:146: () -> "Blade GUI backdrop UBO " + index,
+src\main\java\org\alexdlc\utils\render\gui\GuiTexture.java:75: }, "Blade SVG Prewarm");
+src\main\java\org\alexdlc\utils\render\jump\JumpCircleRenderer.java:87: () -> "Blade Jump Circle Vertices",
+src\main\java\org\alexdlc\utils\render\jump\JumpCircleRenderer.java:97: () -> "Blade Jump Circle Pass", colorView, Optional.empty(), depthView, OptionalDouble.empty())
+src\main\java\org\alexdlc\utils\render\jump\JumpCircleRenderer.java:99: () -> "Blade Jump Circle Pass", colorView, Optional.empty());
+src\main\java\org\alexdlc\utils\render\jump\JumpCircleRenderer.java:155: () -> "Blade Jump Circle UBO",
+src\main\java\org\alexdlc\utils\render\jump\JumpGlowRenderer.java:65: private final SceneSnapshot scene = new SceneSnapshot("blade-jump-glow-scene");
+src\main\java\org\alexdlc\utils\render\jump\JumpGlowRenderer.java:91: () -> "Blade Jump Glow Vertices",
+src\main\java\org\alexdlc\utils\render\jump\JumpGlowRenderer.java:101: () -> "Blade Jump Glow Pass", colorView, Optional.empty(), depthView, OptionalDouble.empty())
+src\main\java\org\alexdlc\utils\render\jump\JumpGlowRenderer.java:103: () -> "Blade Jump Glow Pass", colorView, Optional.empty());
+src\main\java\org\alexdlc\utils\render\jump\JumpGlowRenderer.java:169: () -> "Blade Jump Glow UBO",
+src\main\java\org\alexdlc\utils\render\jump\JumpWaveRenderer.java:62: private final SceneSnapshot scene = new SceneSnapshot("blade-jump-wave-scene");
+src\main\java\org\alexdlc\utils\render\jump\JumpWaveRenderer.java:87: () -> "Blade Jump Wave Vertices",
+src\main\java\org\alexdlc\utils\render\jump\JumpWaveRenderer.java:97: () -> "Blade Jump Wave Pass", colorView, Optional.empty(), depthView, OptionalDouble.empty())
+src\main\java\org\alexdlc\utils\render\jump\JumpWaveRenderer.java:99: () -> "Blade Jump Wave Pass", colorView, Optional.empty());
+src\main\java\org\alexdlc\utils\render\jump\JumpWaveRenderer.java:155: () -> "Blade Jump Wave UBO",
+src\main\java\org\alexdlc\utils\render\particles\ProceduralParticleRenderer.java:186: () -> "Blade Procedural Particle Instances",
+src\main\java\org\alexdlc\utils\render\particles\ProceduralParticleRenderer.java:199: () -> "Blade Procedural Particles",
+src\main\java\org\alexdlc\utils\render\particles\ProceduralParticleRenderer.java:263: () -> "Blade Procedural Particle UBO",
+src\main\java\org\alexdlc\utils\render\particles\ProceduralParticleRenderer.java:292: "blade-procedural-particle-depth",
+src\main\java\org\alexdlc\utils\render\particles\WorldParticleRenderer.java:139: () -> "Blade World Particles Vertices",
+src\main\java\org\alexdlc\utils\render\particles\WorldParticleRenderer.java:149: () -> "Blade World Particles Pass", colorView, Optional.empty(), depthView, OptionalDouble.empty())
+src\main\java\org\alexdlc\utils\render\particles\WorldParticleRenderer.java:151: () -> "Blade World Particles Pass", colorView, Optional.empty());
+src\main\java\org\alexdlc\utils\render\particles\WorldParticleRenderer.java:179: () -> "Blade World Particles UBO",
+src\main\java\org\alexdlc\utils\render\post\FullscreenQuad.java:46: () -> "Blade fullscreen quad",
+src\main\java\org\alexdlc\utils\render\target\AuraMarkerRenderer.java:160: () -> "Blade Aura Marker Vertices",
+src\main\java\org\alexdlc\utils\render\target\AuraMarkerRenderer.java:167: () -> "Blade Aura Marker Pass",
+src\main\java\org\alexdlc\utils\render\target\AuraMarkerRenderer.java:203: () -> "Blade Aura Marker UBO",
+src\main\java\org\alexdlc\utils\render\target\DeadheadTargetRenderer.java:314: () -> "Blade 3D Deadhead Vertices",
+src\main\java\org\alexdlc\utils\render\target\DeadheadTargetRenderer.java:322: () -> "Blade 3D Deadhead Pass", colorView, Optional.empty());
+src\main\java\org\alexdlc\utils\render\target\DeadheadTargetRenderer.java:343: () -> "Blade 3D Deadhead UBO",
+src\main\java\org\alexdlc\utils\render\world\BlockOutlineRenderer.java:40: "Blade Block Outline Transform UBO",
+src\main\java\org\alexdlc\utils\render\world\BlockOutlineRenderer.java:44: "Blade Block Outline Style UBO",
+src\main\java\org\alexdlc\utils\render\world\BlockOutlineRenderer.java:114: () -> "Blade Block Outline",
+src\main\java\org\alexdlc\utils\render\world\BlockOutlineRenderer.java:145: () -> "Blade Block Outline Vertices",
+src\main\java\org\alexdlc\utils\render\world\DynamicLightRenderer.java:33: private final GpuBuffer uniforms = PostFx.createUniforms("Blade Point Light UBO", UNIFORM_SIZE);
+src\main\java\org\alexdlc\utils\render\world\DynamicLightRenderer.java:34: private final GpuBuffer lights = PostFx.createUniforms("Blade Point Light Array UBO", LIGHTS_SIZE);
+src\main\java\org\alexdlc\utils\render\world\DynamicLightRenderer.java:35: private final PostTarget sceneCopy = new PostTarget("blade-dynamic-light-scene", PostPipelines.EFFECT_FORMAT, false);
+src\main\java\org\alexdlc\utils\render\world\DynamicLightRenderer.java:87: PostFx.pass("Blade Dynamic Point Lights", PostPipelines.POINT_LIGHTS, mainTarget, pass -> {
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:66: private final GpuBuffer maskUniforms = uniformBuffer("Blade Arm Fill Mask UBO", MASK_UNIFORM_SIZE);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:67: private final GpuBuffer fillUniforms = uniformBuffer("Blade Arm Fill UBO", FILL_UNIFORM_SIZE);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:68: private final GpuBuffer glassUniforms = uniformBuffer("Blade Arm Glass UBO", GLASS_UNIFORM_SIZE);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:69: private final GpuBuffer outlineUniforms = uniformBuffer("Blade Arm Outline UBO", OUTLINE_UNIFORM_SIZE);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:70: private final GpuBuffer haloUniforms = uniformBuffer("Blade Arm Halo UBO", HALO_UNIFORM_SIZE);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:71: private final GpuBuffer trailUniforms = uniformBuffer("Blade Arm Flame Accum UBO", TRAIL_UNIFORM_SIZE);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:72: private final GpuBuffer flameUniforms = uniformBuffer("Blade Arm Flame UBO", FLAME_UNIFORM_SIZE);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:75: "blade-arm-blur",
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:222: try (RenderPass pass = renderPass("Blade Arm Fill mask", this.maskRawTarget)) {
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:232: try (RenderPass pass = renderPass("Blade Arm Fill mask smooth", this.maskTarget)) {
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:244: try (RenderPass pass = renderPass("Blade Arm fill", mainTarget)) {
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:258: try (RenderPass pass = renderPass("Blade Arm glass fill", mainTarget)) {
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:269: try (RenderPass pass = renderPass("Blade Arm outline", mainTarget)) {
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:281: try (RenderPass pass = renderPass("Blade Arm halo", mainTarget)) {
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:294: try (RenderPass pass = renderPass("Blade Arm flame accumulation", destination)) {
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:309: try (RenderPass pass = renderPass("Blade Arm flame composite", mainTarget)) {
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:463: this.beforeTarget = ensureTarget(this.beforeTarget, "blade-arm-before", width, height, true, PostPipelines.EFFECT_FORMAT);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:464: this.maskRawTarget = ensureTarget(this.maskRawTarget, "blade-arm-mask-raw", width, height, false, PostPipelines.MASK_RAW_FORMAT);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:465: this.maskTarget = ensureTarget(this.maskTarget, "blade-arm-mask", width, height, false, PostPipelines.EFFECT_FORMAT);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:466: this.trailA = ensureTarget(this.trailA, "blade-arm-flame-a", width, height, false, PostPipelines.EFFECT_FORMAT);
+src\main\java\org\alexdlc\utils\render\world\ShaderHandsRenderer.java:467: this.trailB = ensureTarget(this.trailB, "blade-arm-flame-b", width, height, false, PostPipelines.EFFECT_FORMAT);
+src\main\java\org\alexdlc\utils\render\world\WorldMeshRenderer.java:46: .withVertexShader(Identifier.parse("alexdlc:core/blade_line"))
+src\main\java\org\alexdlc\utils\render\world\WorldMeshRenderer.java:47: .withFragmentShader(Identifier.parse("alexdlc:core/blade_line"))
+src\main\java\org\alexdlc\utils\render\world\WorldMeshRenderer.java:92: () -> "Blade World Mesh Pass", colorView, Optional.empty(), depthView, OptionalDouble.empty())
+src\main\java\org\alexdlc\utils\render\world\WorldMeshRenderer.java:94: () -> "Blade World Mesh Pass", colorView, Optional.empty());
+src\main\java\org\alexdlc\utils\render\world\WorldMeshRenderer.java:118: () -> "Blade World Mesh Vertices",
+src\main\java\org\alexdlc\utils\render\world\WorldTweaksRenderer.java:40: "Blade World Sky UBO",
+src\main\java\org\alexdlc\utils\render\world\WorldTweaksRenderer.java:44: "Blade World Saturation UBO",
+src\main\java\org\alexdlc\utils\render\world\WorldTweaksRenderer.java:87: () -> "Blade WorldTweaks sky clouds",
+src\main\java\org\alexdlc\utils\render\world\WorldTweaksRenderer.java:99: () -> "Blade WorldTweaks sky",
+src\main\java\org\alexdlc\utils\render\world\WorldTweaksRenderer.java:145: () -> "Blade WorldTweaks saturation",
+src\main\java\org\alexdlc\utils\render\world\WorldTweaksRenderer.java:209: "blade-world-tweaks-scene",
+src\main\java\org\alexdlc\utils\render\world\WorldTweaksRenderer.java:229: "blade-world-tweaks-sky-clouds",
