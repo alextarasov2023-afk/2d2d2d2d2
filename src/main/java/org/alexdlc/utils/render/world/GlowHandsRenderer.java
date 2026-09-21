@@ -351,11 +351,6 @@ public final class GlowHandsRenderer {
             }
             return feature.customColor();
         }
-        int tint = minecraft.itemColors.getColor(stack, 0);
-        if ((tint & 0xFFFFFF) != 0xFFFFFF && (tint & 0xFFFFFF) != 0) {
-            return tint | 0xFF000000;
-        }
-
         if (stack.is(ItemTags.SWORDS)) {
             return 0xFFD2691E;
         }
