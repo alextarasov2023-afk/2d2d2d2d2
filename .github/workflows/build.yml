@@ -24,12 +24,30 @@ jobs:
           cache: gradle
 
       - name: Build mod
-        run: ./gradlew build --no-daemon --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew build --no-daemon --stacktrace 2>&1 | tee gradle-build.log
+
+      - name: Publish build log
+        if: always()
+        run: |
+          git config user.name "build-logger"
+          git config user.email "build-logger@users.noreply.github.com"
+          git checkout -B build-logs
+          rm -f build-log.txt
+          cp gradle-build.log build-log.txt 2>/dev/null || echo "no gradle log" > build-log.txt
+          git add build-log.txt
+          git commit -m "build log for run ${{ github.run_id }}" || true
+          git push --force origin HEAD:build-logs
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: List outputs
+        if: success()
         run: ls -la build/libs
 
       - name: Stage artifact
+        if: success()
         run: |
           mkdir -p dist
           cp build/libs/*.jar dist/
@@ -37,6 +55,7 @@ jobs:
           ls -la dist/
 
       - name: Upload artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: alexdlc-build
@@ -44,6 +63,7 @@ jobs:
           if-no-files-found: error
 
       - name: Publish GitHub release (best effort)
+        if: success()
         continue-on-error: true
         run: |
           set -e
