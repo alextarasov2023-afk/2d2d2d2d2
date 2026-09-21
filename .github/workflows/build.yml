@@ -51,6 +51,39 @@ jobs:
           jar tf "$JAR" | grep -q "\.class"
           echo "jar OK: $(jar tf "$JAR" | grep -c '\.class') classes"
 
+      - name: Publish direct download links
+        if: success()
+        continue-on-error: true
+        run: |
+          JAR=$(ls dist/*.jar | head -n1)
+          NAME="alexdlc-mc26.2-fabric.jar"
+          cp "$JAR" "/tmp/$NAME"
+          echo "## Direct download" >> "$GITHUB_STEP_SUMMARY"
+          OK=0
+          for HOST in temp.sh bashupload.com; do
+            URL="https://$HOST/$NAME"
+            echo "trying $URL"
+            if curl -fsS --max-time 300 -T "/tmp/$NAME" "$URL"; then
+              echo "UPLOADED to $URL"
+              echo "::notice title=Direct download::$URL"
+              echo "- direct download: $URL" >> "$GITHUB_STEP_SUMMARY"
+              OK=1
+            else
+              echo "host $HOST failed"
+            fi
+          done
+          if [ "$OK" = "0" ]; then
+            URL=$(curl -fsS --max-time 300 -F "file=@/tmp/$NAME" https://0x0.st || true)
+            if [ -n "$URL" ]; then
+              echo "UPLOADED to $URL"
+              echo "::notice title=Direct download::$URL"
+              echo "- direct download: $URL" >> "$GITHUB_STEP_SUMMARY"
+              OK=1
+            else
+              echo "all hosts failed; artifact remains as fallback"
+            fi
+          fi
+
       - name: Upload artifact
         if: success()
         uses: actions/upload-artifact@v4
