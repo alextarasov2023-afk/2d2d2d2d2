@@ -12,20 +12,12 @@ import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.FishingRodItem;
-import net.minecraft.world.item.HoeItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.PickaxeItem;
-import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.ShovelItem;
-import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.alexdlc.feature.impl.visual.GlowHandsFeature;
 import org.alexdlc.utils.render.post.PostFx;
 import org.alexdlc.utils.render.post.FullscreenQuad;
@@ -352,18 +344,31 @@ public final class GlowHandsRenderer {
             return tint | 0xFF000000;
         }
 
-        return switch (item) {
-            case SwordItem ignored -> 0xFFD2691E;
-            case AxeItem ignored -> 0xFF6FA8C9;
-            case PickaxeItem ignored -> 0xFF9B8CC9;
-            case ShovelItem ignored -> 0xFF7FB069;
-            case HoeItem ignored -> 0xFFB08968;
-            case BowItem ignored, CrossbowItem ignored -> 0xFF86C232;
-            case FishingRodItem ignored -> 0xFF9C6644;
-            case PotionItem ignored -> 0xFFB197FC;
-            case ArmorItem ignored -> 0xFF8D99AE;
-            default -> feature.customColor();
-        };
+        if (stack.is(ItemTags.SWORDS)) {
+            return 0xFFD2691E;
+        }
+        if (stack.is(ItemTags.AXES)) {
+            return 0xFF6FA8C9;
+        }
+        if (stack.is(ItemTags.PICKAXES)) {
+            return 0xFF9B8CC9;
+        }
+        if (stack.is(Items.BOW) || stack.is(Items.CROSSBOW)) {
+            return 0xFF86C232;
+        }
+        if (stack.is(Items.FISHING_ROD)) {
+            return 0xFF9C6644;
+        }
+        if (stack.is(Items.POTION)) {
+            return 0xFFB197FC;
+        }
+        if (stack.is(ItemTags.HEAD_ARMOR)
+                || stack.is(ItemTags.CHEST_ARMOR)
+                || stack.is(ItemTags.LEG_ARMOR)
+                || stack.is(ItemTags.FOOT_ARMOR)) {
+            return 0xFF8D99AE;
+        }
+        return feature.customColor();
     }
 
     private void ensureTargets(int width, int height) {

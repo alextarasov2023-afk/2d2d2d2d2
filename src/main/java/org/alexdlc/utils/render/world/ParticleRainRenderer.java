@@ -1,7 +1,7 @@
 package org.alexdlc.utils.render.world;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientLevel;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
