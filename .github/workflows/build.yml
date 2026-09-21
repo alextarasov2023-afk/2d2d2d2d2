@@ -28,6 +28,14 @@ jobs:
           set -o pipefail
           ./gradlew build --no-daemon --stacktrace 2>&1 | tee gradle-build.log
 
+      - name: Report build errors
+        if: failure()
+        run: |
+          grep -E "error:|FAILURE:|Execution failed|Caused by" gradle-build.log | head -40 | \
+          while IFS= read -r line; do echo "::error title=Build::$line"; done
+          echo "----- tail of gradle-build.log -----"
+          tail -n 120 gradle-build.log
+
       - name: List outputs
         if: success()
         run: ls -la build/libs
