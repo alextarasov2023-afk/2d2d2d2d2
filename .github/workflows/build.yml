@@ -1,0 +1,58 @@
+name: build
+
+on:
+  push:
+    branches: [arena/01a0c51d-2d2d2d2d2]
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+
+      - name: Build mod
+        run: ./gradlew build --no-daemon --stacktrace
+
+      - name: List outputs
+        run: ls -la build/libs
+
+      - name: Stage artifact
+        run: |
+          mkdir -p dist
+          cp build/libs/*.jar dist/
+          rm -f dist/*-sources.jar dist/*-dev.jar
+          ls -la dist/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: alexdlc-build
+          path: dist/
+          if-no-files-found: error
+
+      - name: Publish GitHub release (best effort)
+        continue-on-error: true
+        run: |
+          set -e
+          JAR=$(ls dist/*.jar | head -n1)
+          SHA=$(git rev-parse --short HEAD)
+          gh release delete alexdlc-build --cleanup-tag || true
+          gh release create alexdlc-build "$JAR" \
+            --title "alexdlc build (${SHA})" \
+            --notes "Automatic build of commit ${SHA}. Minecraft 26.2, Fabric." \
+            --prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
