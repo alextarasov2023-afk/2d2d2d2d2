@@ -14,18 +14,19 @@ import com.mojang.blaze3d.textures.GpuSampler;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.HumanoidArm;
+import org.alexdlc.feature.FeatureManager;
+import org.alexdlc.feature.impl.visual.GlowHandsFeature;
+import org.alexdlc.feature.impl.visual.OutlineHandsFeature;
 import org.alexdlc.feature.impl.visual.ShaderHandsFeature;
-import org.alexdlc.utils.render.post.PostFx;
 import org.alexdlc.utils.ColorUtil;
 import org.alexdlc.utils.render.post.FullscreenQuad;
-import org.alexdlc.utils.render.post.PostPipelines;
 import org.alexdlc.utils.render.post.KawaseBlur;
+import org.alexdlc.utils.render.post.PostFx;
+import org.alexdlc.utils.render.post.PostPipelines;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public final class ShaderHandsRenderer {
@@ -63,6 +64,7 @@ public final class ShaderHandsRenderer {
             .putVec4()
             .putFloat()
             .get();
+
     private final GpuBuffer maskUniforms = uniformBuffer("Alex DLC Arm Fill Mask UBO", MASK_UNIFORM_SIZE);
     private final GpuBuffer fillUniforms = uniformBuffer("Alex DLC Arm Fill UBO", FILL_UNIFORM_SIZE);
     private final GpuBuffer glassUniforms = uniformBuffer("Alex DLC Arm Glass UBO", GLASS_UNIFORM_SIZE);
@@ -83,6 +85,7 @@ public final class ShaderHandsRenderer {
                     .putFloat(offset)
                     .putFloat(alpha)
     );
+
     private TextureTarget beforeTarget;
     private TextureTarget maskRawTarget;
     private TextureTarget maskTarget;
@@ -91,7 +94,16 @@ public final class ShaderHandsRenderer {
     private boolean trailUsesA;
     private boolean flameHistoryActive;
 
-    public void render(ShaderHandsFeature feature, Runnable handDraw) {
+    public void render(Runnable handDraw) {
+        ShaderHandsFeature fillFeature = FeatureManager.INSTANCE.getEnabled(ShaderHandsFeature.class);
+        GlowHandsFeature glowFeature = FeatureManager.INSTANCE.getEnabled(GlowHandsFeature.class);
+        OutlineHandsFeature outlineFeature = FeatureManager.INSTANCE.getEnabled(OutlineHandsFeature.class);
+
+        if (fillFeature == null && glowFeature == null && outlineFeature == null) {
+            handDraw.run();
+            return;
+        }
+
         Minecraft minecraft = Minecraft.getInstance();
         RenderTarget mainTarget = minecraft.gameRenderer.mainRenderTarget();
         if (!validMainTarget(mainTarget)) {
@@ -125,13 +137,13 @@ public final class ShaderHandsRenderer {
 
         GpuSampler sampler = RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR);
 
-        writeMaskUniforms(feature, mainTarget.width, mainTarget.height);
+        writeMaskUniforms(fillFeature, glowFeature, outlineFeature, mainTarget.width, mainTarget.height);
         renderMask(mainTarget, sampler);
 
-        if (feature.hasFill()) {
-            if (feature.hasGlass()) {
+        if (fillFeature != null) {
+            if (fillFeature.fillType.is(ShaderHandsFeature.GLASS)) {
                 GpuTextureView scene = this.beforeTarget.getColorTextureView();
-                float blurRadius = feature.glassBlur.getValue().floatValue();
+                float blurRadius = fillFeature.glassBlur.getValue().floatValue();
                 if (blurRadius > 0.001F) {
                     scene = blurTexture(
                             scene,
@@ -142,38 +154,38 @@ public final class ShaderHandsRenderer {
                             sampler
                     );
                 }
-                writeGlassUniforms(feature);
+                writeGlassUniforms(fillFeature);
                 renderGlass(mainTarget, scene, sampler);
             } else {
-                writeFillUniforms(feature);
-                renderFill(feature, mainTarget, sampler);
+                writeFillUniforms(fillFeature);
+                renderFill(fillFeature, mainTarget, sampler);
             }
         }
 
-        if (feature.hasOutline()) {
-            writeOutlineUniforms(feature);
+        if (outlineFeature != null) {
+            writeOutlineUniforms(outlineFeature);
             renderOutline(mainTarget, sampler);
         }
 
-        if (feature.hasGlow()) {
+        if (glowFeature != null) {
             GpuTextureView blurredMask = blurTexture(
                     this.maskTarget.getColorTextureView(),
                     mainTarget.width,
                     mainTarget.height,
-                    feature.glowRadius.getValue().floatValue(),
+                    glowFeature.glowRadius.getValue().floatValue(),
                     true,
                     sampler
             );
-            if (feature.hasFlame()) {
-                float time = PostFx.shaderTime() * feature.flameSpeed.getValue().floatValue();
-                writeTrailUniforms(feature, mainTarget.width, mainTarget.height, time);
+            if (glowFeature.mode.is(GlowHandsFeature.MODE_FLAME)) {
+                float time = PostFx.shaderTime() * glowFeature.flameSpeed.getValue().floatValue();
+                writeTrailUniforms(glowFeature, mainTarget.width, mainTarget.height, time);
                 GpuTextureView flame = renderTrail(blurredMask, sampler);
-                writeFlameUniforms(feature, time);
+                writeFlameUniforms(glowFeature, time);
                 renderFlame(mainTarget, flame, sampler);
                 this.flameHistoryActive = true;
             } else {
                 clearFlameHistoryIfNeeded();
-                writeHaloUniforms(feature);
+                writeHaloUniforms(glowFeature);
                 renderHalo(mainTarget, blurredMask, sampler);
             }
         } else {
@@ -218,7 +230,6 @@ public final class ShaderHandsRenderer {
     }
 
     private void renderMask(RenderTarget mainTarget, GpuSampler sampler) {
-
         try (RenderPass pass = renderPass("Alex DLC Arm Fill mask", this.maskRawTarget)) {
             pass.setPipeline(PostPipelines.HAND_MASK);
             RenderSystem.bindDefaultUniforms(pass);
@@ -241,10 +252,17 @@ public final class ShaderHandsRenderer {
     private void renderFill(ShaderHandsFeature feature,
                             RenderTarget mainTarget,
                             GpuSampler sampler) {
+        RenderPipeline pipeline = PostPipelines.HAND_FILL;
+        if (feature.fillType.is(ShaderHandsFeature.PLASMA)) {
+            pipeline = PostPipelines.HAND_PLASMA;
+        } else if (feature.fillType.is(ShaderHandsFeature.NEBULA)) {
+            pipeline = PostPipelines.HAND_NEBULA;
+        } else if (feature.fillType.is(ShaderHandsFeature.PRISMATIC)) {
+            pipeline = PostPipelines.HAND_PRISMATIC;
+        }
+
         try (RenderPass pass = renderPass("Alex DLC Arm fill", mainTarget)) {
-            pass.setPipeline(feature.hasPlasma()
-                    ? PostPipelines.HAND_PLASMA
-                    : PostPipelines.HAND_FILL);
+            pass.setPipeline(pipeline);
             RenderSystem.bindDefaultUniforms(pass);
             pass.setUniform("HandFillUniforms", this.fillUniforms);
             pass.bindTexture("MaskSampler", this.maskTarget.getColorTextureView(), sampler);
@@ -337,15 +355,21 @@ public final class ShaderHandsRenderer {
         );
     }
 
-    private void writeMaskUniforms(ShaderHandsFeature feature, int width, int height) {
+    private void writeMaskUniforms(ShaderHandsFeature fill, GlowHandsFeature glow, OutlineHandsFeature outline, int width, int height) {
         Minecraft minecraft = Minecraft.getInstance();
-        boolean left = feature.bothHands.getValue();
-        boolean right = feature.bothHands.getValue();
-        if (!feature.bothHands.getValue()) {
+        boolean left = true;
+        boolean right = true;
+
+        boolean bothHands = (fill == null || fill.bothHands.getValue())
+                && (glow == null || glow.bothHands.getValue())
+                && (outline == null || outline.bothHands.getValue());
+
+        if (!bothHands) {
             HumanoidArm mainArm = minecraft.player == null ? HumanoidArm.RIGHT : minecraft.player.getMainArm();
             left = mainArm == HumanoidArm.LEFT;
             right = mainArm == HumanoidArm.RIGHT;
         }
+
         try (MemoryStack stack = MemoryStack.stackPush()) {
             ByteBuffer data = Std140Builder.onStack(stack, MASK_UNIFORM_SIZE)
                     .putVec2(1.0F / width, 1.0F / height)
@@ -363,10 +387,10 @@ public final class ShaderHandsRenderer {
                             channel(ColorUtil.red(color)),
                             channel(ColorUtil.green(color)),
                             channel(ColorUtil.blue(color)),
-                            feature.fillOpacity.getValue().floatValue()
+                            feature.opacity.getValue().floatValue()
                     )
                     .putVec4(
-                            PostFx.shaderTime() * feature.plasmaSpeed.getValue().floatValue(),
+                            PostFx.shaderTime() * feature.shaderSpeed.getValue().floatValue(),
                             0.0F,
                             0.0F,
                             0.0F
@@ -384,15 +408,15 @@ public final class ShaderHandsRenderer {
                             channel(ColorUtil.red(color)),
                             channel(ColorUtil.green(color)),
                             channel(ColorUtil.blue(color)),
-                            feature.fillOpacity.getValue().floatValue()
+                            feature.opacity.getValue().floatValue()
                     )
-                    .putFloat(feature.mirror.getValue() ? 1.0F : 0.0F)
+                    .putFloat(feature.glassMirror.getValue() ? 1.0F : 0.0F)
                     .get();
             write(this.glassUniforms, data);
         }
     }
 
-    private void writeOutlineUniforms(ShaderHandsFeature feature) {
+    private void writeOutlineUniforms(OutlineHandsFeature feature) {
         int color = feature.resolvedColor();
         try (MemoryStack stack = MemoryStack.stackPush()) {
             ByteBuffer data = Std140Builder.onStack(stack, OUTLINE_UNIFORM_SIZE)
@@ -400,7 +424,7 @@ public final class ShaderHandsRenderer {
                             channel(ColorUtil.red(color)),
                             channel(ColorUtil.green(color)),
                             channel(ColorUtil.blue(color)),
-                            1.0F
+                            feature.opacity.getValue().floatValue()
                     )
                     .putFloat(feature.outlineThickness.getValue().floatValue())
                     .get();
@@ -408,7 +432,7 @@ public final class ShaderHandsRenderer {
         }
     }
 
-    private void writeHaloUniforms(ShaderHandsFeature feature) {
+    private void writeHaloUniforms(GlowHandsFeature feature) {
         int color = feature.resolvedColor();
         try (MemoryStack stack = MemoryStack.stackPush()) {
             ByteBuffer data = Std140Builder.onStack(stack, HALO_UNIFORM_SIZE)
@@ -424,7 +448,7 @@ public final class ShaderHandsRenderer {
         }
     }
 
-    private void writeTrailUniforms(ShaderHandsFeature feature, int width, int height, float time) {
+    private void writeTrailUniforms(GlowHandsFeature feature, int width, int height, float time) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             ByteBuffer data = Std140Builder.onStack(stack, TRAIL_UNIFORM_SIZE)
                     .putVec2(1.0F / width, 1.0F / height)
@@ -437,7 +461,7 @@ public final class ShaderHandsRenderer {
         }
     }
 
-    private void writeFlameUniforms(ShaderHandsFeature feature, float time) {
+    private void writeFlameUniforms(GlowHandsFeature feature, float time) {
         int color = feature.resolvedColor();
         try (MemoryStack stack = MemoryStack.stackPush()) {
             ByteBuffer data = Std140Builder.onStack(stack, FLAME_UNIFORM_SIZE)

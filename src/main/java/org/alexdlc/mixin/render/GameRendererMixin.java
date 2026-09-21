@@ -10,8 +10,10 @@ import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import org.alexdlc.context.RenderContext;
-import org.alexdlc.feature.impl.visual.RemovalsFeature;
 import org.alexdlc.feature.FeatureManager;
+import org.alexdlc.feature.impl.visual.GlowHandsFeature;
+import org.alexdlc.feature.impl.visual.OutlineHandsFeature;
+import org.alexdlc.feature.impl.visual.RemovalsFeature;
 import org.alexdlc.feature.impl.visual.ShaderHandsFeature;
 import org.alexdlc.event.EventManager;
 import org.alexdlc.event.Events;
@@ -61,12 +63,14 @@ public abstract class GameRendererMixin {
             )
     )
     private void renderShaderHands(FeatureRenderDispatcher dispatcher,
-                                         SubmitNodeStorage storage,
-                                         Operation<Void> original) {
-        ShaderHandsFeature feature = FeatureManager.INSTANCE.getEnabled(ShaderHandsFeature.class);
-        if (feature == null) {
-            if (shaderHandsRenderer != null) {
+                                   SubmitNodeStorage storage,
+                                   Operation<Void> original) {
+        ShaderHandsFeature fill = FeatureManager.INSTANCE.getEnabled(ShaderHandsFeature.class);
+        GlowHandsFeature glow = FeatureManager.INSTANCE.getEnabled(GlowHandsFeature.class);
+        OutlineHandsFeature outline = FeatureManager.INSTANCE.getEnabled(OutlineHandsFeature.class);
 
+        if (fill == null && glow == null && outline == null) {
+            if (shaderHandsRenderer != null) {
                 shaderHandsRenderer.release();
                 shaderHandsRenderer = null;
             }
@@ -76,7 +80,7 @@ public abstract class GameRendererMixin {
         if (shaderHandsRenderer == null) {
             shaderHandsRenderer = new ShaderHandsRenderer();
         }
-        shaderHandsRenderer.render(feature, () -> original.call(dispatcher, storage));
+        shaderHandsRenderer.render(() -> original.call(dispatcher, storage));
     }
 
     @Inject(method = "renderLevel", at = @At("TAIL"))
