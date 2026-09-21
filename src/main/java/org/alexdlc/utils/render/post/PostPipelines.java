@@ -214,30 +214,6 @@ public final class PostPipelines {
             .withCull(false)
             .build();
 
-    public static final RenderPipeline HAND_NEBULA = RenderPipeline.builder()
-            .withLocation(Identifier.parse("alexdlc:pipeline/post/hand_nebula"))
-            .withVertexShader(Identifier.parse("alexdlc:post/blurs/kawase_common"))
-            .withFragmentShader(Identifier.parse("alexdlc:post/hand_nebula"))
-            .withBindGroupLayout(HAND_FILL_LAYOUT)
-            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-            .withDepthStencilState(Optional.<DepthStencilState>empty())
-            .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
-            .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
-            .withCull(false)
-            .build();
-
-    public static final RenderPipeline HAND_PRISMATIC = RenderPipeline.builder()
-            .withLocation(Identifier.parse("alexdlc:pipeline/post/hand_prismatic"))
-            .withVertexShader(Identifier.parse("alexdlc:post/blurs/kawase_common"))
-            .withFragmentShader(Identifier.parse("alexdlc:post/hand_prismatic"))
-            .withBindGroupLayout(HAND_FILL_LAYOUT)
-            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-            .withDepthStencilState(Optional.<DepthStencilState>empty())
-            .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX)
-            .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
-            .withCull(false)
-            .build();
-
     public static final RenderPipeline HAND_GLASS = RenderPipeline.builder()
             .withLocation(Identifier.parse("alexdlc:pipeline/post/hand_glass"))
             .withVertexShader(Identifier.parse("alexdlc:post/blurs/kawase_common"))
@@ -383,8 +359,6 @@ public final class PostPipelines {
             "plasma", "alexdlc:post/chams_plasma", CHAMS_MASK_STYLE_LAYOUT, BlendFunction.TRANSLUCENT);
     public static final RenderPipeline CHAMS_NEBULA = chamsPipeline(
             "nebula", "alexdlc:post/chams_nebula", CHAMS_MASK_STYLE_LAYOUT, BlendFunction.TRANSLUCENT);
-    public static final RenderPipeline CHAMS_PRISMATIC = chamsPipeline(
-            "prismatic", "alexdlc:post/chams_prismatic", CHAMS_MASK_STYLE_LAYOUT, BlendFunction.TRANSLUCENT);
     public static final RenderPipeline CHAMS_GLASS = chamsPipeline(
             "glass", "alexdlc:post/chams_glass", CHAMS_GLASS_LAYOUT, BlendFunction.TRANSLUCENT);
     public static final RenderPipeline CHAMS_OUTLINE = chamsPipeline(
