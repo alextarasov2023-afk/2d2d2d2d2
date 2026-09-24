@@ -104,15 +104,42 @@ public abstract class LoadingOverlayMixin {
             this.currentProgress = Mth.clamp(this.currentProgress * 0.98F + targetProgress * 0.02F, 0.0F, 1.0F);
         }
 
+        // Vanilla completion logic: once the reload is done (and fade-in finished, if any),
+        // finalize resources via onFinish BEFORE the screen underneath is ever rendered.
+        // Rendering the screen earlier crashes because texture atlases (GUI sprites) are
+        // not initialized until onFinish has run.
+        if (this.fadeOutStart == -1L && this.reload.isDone() && this.currentProgress >= 0.99F) {
+            float fadeInProgress = this.fadeIn && this.fadeInStart > -1L
+                    ? (float)(currentTime - this.fadeInStart) / 1000.0F
+                    : 1.0F;
+            if (!this.fadeIn || fadeInProgress >= 1.0F) {
+                try {
+                    this.reload.checkExceptions();
+                    this.onFinish.accept(Optional.empty());
+                } catch (Throwable t) {
+                    this.onFinish.accept(Optional.of(t));
+                }
+                this.fadeOutStart = Util.getMillis();
+                if (this.minecraft.gui.screen() != null) {
+                    this.minecraft.gui.screen().init(width, height);
+                }
+            }
+        }
+
         float fadeOutProgress = this.fadeOutStart > -1L ? (float)(currentTime - this.fadeOutStart) / 1500.0F : 0.0F;
 
         if (fadeOutProgress >= 1.0F) {
             this.minecraft.gui.setOverlay(null);
             RenderContext.overlayStartTime = -1L;
+            if (this.minecraft.gui.screen() != null) {
+                this.minecraft.gui.screen().extractRenderStateWithTooltipAndSubtitles(guiGraphicsExtractor, mouseX, mouseY, partialTick);
+            }
             return;
         }
 
-        if (this.reload.isDone() && this.minecraft.gui.screen() != null) {
+        // Only draw the screen underneath after onFinish has run (fadeOutStart is set),
+        // otherwise sprite atlases may not be initialized yet.
+        if (this.fadeOutStart > -1L && this.minecraft.gui.screen() != null) {
             this.minecraft.gui.screen().extractRenderStateWithTooltipAndSubtitles(guiGraphicsExtractor, mouseX, mouseY, partialTick);
         }
 
